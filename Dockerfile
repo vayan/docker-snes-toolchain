@@ -9,9 +9,11 @@ RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g+
 # But just in case here the working commits as of 3/5/2020:
 # optixx/snes-sdk -> 9fa04efab6b3c9817badf6c9ab2518e5572a6fba
 # alekmaul/pvsneslib -> 1f705a3367d0031c1f74de29247ef8a24aff0d74
+# boldowa/snesbrr -> be3f210aef0e5992bb0ec6d139a0270145ced3b6
 # yes the time I took to wrote this is more effort than just cloning those commits.
 RUN git clone https://github.com/optixx/snes-sdk
 RUN git clone https://github.com/alekmaul/pvsneslib
+RUN git clone https://github.com/boldowa/snesbrr
 
 # /d/snesdev/ is the default `DEVKITSNES` path from the pvsneslib template
 RUN mkdir -p /d/snesdev/pvsneslib
@@ -44,6 +46,7 @@ RUN cp gfx2snes.exe /d/snesdev/devkitsnes/tools/gfx2snes
 COPY ./patches /patches
 
 WORKDIR /pvsneslib/tools/bin2txt
+# While we wait for this to be merged https://github.com/alekmaul/pvsneslib/pull/38 we need to patch it, or I could use my fork... yea yea
 RUN cp /patches/bin2txt.c /pvsneslib/tools/bin2txt/bin2txt.c
 RUN make all
 RUN cp bin2txt.exe /d/snesdev/devkitsnes/tools/bin2txt
@@ -51,6 +54,10 @@ RUN cp bin2txt.exe /d/snesdev/devkitsnes/tools/bin2txt
 WORKDIR /pvsneslib/tools/smconv
 RUN make all
 RUN cp smconv.exe /d/snesdev/devkitsnes/tools/smconv
+
+WORKDIR /snesbrr/src
+RUN make all
+RUN cp snesbrr /d/snesdev/devkitsnes/tools/snesbrr
 
 RUN mkdir game
 WORKDIR /game
