@@ -1,4 +1,6 @@
-# trusty because newer gcc don't work with some tools. didnt had time to debug so I just choose the oldest supported
+# i386 because if we use 64bit gcc some tools segault.
+# trusty because some tools don't compile with latest gcc.
+# didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
 FROM i386/ubuntu:trusty
 
 RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g++ git wget -y
@@ -16,6 +18,12 @@ RUN mkdir -p /d/snesdev/pvsneslib
 RUN wget -qO- https://github.com/alekmaul/pvsneslib/releases/download/2.3.2/devkitsnes-2.3.2.tar.bz2 | tar -xvjf - -C /d/snesdev/
 RUN wget -qO- https://github.com/alekmaul/pvsneslib/releases/download/2.3.2/pvsneslib-2.3.2.tar.bz2 | tar -xvjf - -C /d/snesdev/pvsneslib/
 
+# /d/snesdev/devkitsnes/bin/816-opt.py is expecting python to be in /c/Python27/python
+RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
+
+# smconv is expecting g++ in /e/MinGW32/bin/g++
+RUN mkdir -p /e/MinGW32/bin/ && ln -sf /usr/bin/g++ /e/MinGW32/bin/g++
+
 WORKDIR /snes-sdk
 # SNES9X is not compiling and not needed, we can disable it with SNES9X=0
 RUN make all SNES9X=0
@@ -29,8 +37,20 @@ WORKDIR /pvsneslib/tools/snestools
 RUN make all
 RUN cp snestools.exe /d/snesdev/devkitsnes/tools/snestools
 
-# /d/snesdev/devkitsnes/bin/816-opt.py is expecting python to be in /c/Python27/python
-RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
+WORKDIR /pvsneslib/tools/gfx2snes
+RUN make all
+RUN cp gfx2snes.exe /d/snesdev/devkitsnes/tools/gfx2snes
+
+COPY ./patches /patches
+
+WORKDIR /pvsneslib/tools/bin2txt
+RUN cp /patches/bin2txt.c /pvsneslib/tools/bin2txt/bin2txt.c
+RUN make all
+RUN cp bin2txt.exe /d/snesdev/devkitsnes/tools/bin2txt
+
+WORKDIR /pvsneslib/tools/smconv
+RUN make all
+RUN cp smconv.exe /d/snesdev/devkitsnes/tools/smconv
 
 RUN mkdir game
 WORKDIR /game
