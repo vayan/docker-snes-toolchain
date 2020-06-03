@@ -1,4 +1,4 @@
-# docker-snes-toolchain ![Docker Build Status](https://img.shields.io/docker/build/vayan/snes-toolchain?style=flat-square) ![Docker Pulls](https://img.shields.io/docker/pulls/vayan/snes-toolchain?style=flat-square) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/vayan/snes-toolchain?style=flat-square)
+# docker-snes-toolchain ![Docker Pulls](https://img.shields.io/docker/pulls/vayan/snes-toolchain?style=flat-square) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/vayan/snes-toolchain?style=flat-square)
 
 A Docker toolchain to build your SNES games using pvsneslib on any machine <sub><sup>(with docker)</sup></sub>.
 
