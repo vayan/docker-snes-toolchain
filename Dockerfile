@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g+
 
 # I should probably check from time to time and update those commits (<- this will never happen...)
 RUN git clone https://github.com/optixx/snes-sdk && git -C snes-sdk checkout 9fa04efab6b3c9817badf6c9ab2518e5572a6fba
-RUN git clone https://github.com/alekmaul/pvsneslib && git -C pvsneslib checkout 1f705a3367d0031c1f74de29247ef8a24aff0d74
+RUN git clone https://github.com/alekmaul/pvsneslib && git -C pvsneslib checkout d04b86061a143384e1d2bf8ba7f5ee5e682a31c0
 RUN git clone https://github.com/boldowa/snesbrr && git -C snesbrr checkout be3f210aef0e5992bb0ec6d139a0270145ced3b6
 
 # /d/snesdev/ is the default `DEVKITSNES` path from the pvsneslib template
@@ -38,11 +38,7 @@ WORKDIR /pvsneslib/tools/gfx2snes
 RUN make all
 RUN cp gfx2snes.exe /d/snesdev/devkitsnes/tools/gfx2snes
 
-COPY ./patches /patches
-
 WORKDIR /pvsneslib/tools/bin2txt
-# While we wait for this to be merged https://github.com/alekmaul/pvsneslib/pull/38 we need to patch it, or I could use my fork... yea yea
-RUN cp /patches/bin2txt.c /pvsneslib/tools/bin2txt/bin2txt.c
 RUN make all
 RUN cp bin2txt.exe /d/snesdev/devkitsnes/tools/bin2txt
 
