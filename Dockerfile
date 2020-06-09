@@ -5,15 +5,10 @@ FROM i386/ubuntu:trusty
 
 RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g++ git wget -y
 
-# Those repos don't change too much we should be ok with master.
-# But just in case here the working commits as of 3/5/2020:
-# optixx/snes-sdk -> 9fa04efab6b3c9817badf6c9ab2518e5572a6fba
-# alekmaul/pvsneslib -> 1f705a3367d0031c1f74de29247ef8a24aff0d74
-# boldowa/snesbrr -> be3f210aef0e5992bb0ec6d139a0270145ced3b6
-# yes the time I took to wrote this is more effort than just cloning those commits.
-RUN git clone https://github.com/optixx/snes-sdk
-RUN git clone https://github.com/alekmaul/pvsneslib
-RUN git clone https://github.com/boldowa/snesbrr
+# I should probably check from time to time and update those commits (<- this will never happen...)
+RUN git clone https://github.com/optixx/snes-sdk && git -C snes-sdk checkout 9fa04efab6b3c9817badf6c9ab2518e5572a6fba
+RUN git clone https://github.com/alekmaul/pvsneslib && git -C pvsneslib checkout 1f705a3367d0031c1f74de29247ef8a24aff0d74
+RUN git clone https://github.com/boldowa/snesbrr && git -C snesbrr checkout be3f210aef0e5992bb0ec6d139a0270145ced3b6
 
 # /d/snesdev/ is the default `DEVKITSNES` path from the pvsneslib template
 RUN mkdir -p /d/snesdev/pvsneslib
